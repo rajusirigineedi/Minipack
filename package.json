@@ -2,12 +2,9 @@
   "name": "minipack",
   "version": "1.0.0",
   "description": "",
-  "main": "bundler.js",
+  "private": true,
   "scripts": {
-    "bundle": "node bundler.js | js-beautify",
-    "output": "node output.js",
-    "b": "clear & npm run bundle",
-    "o": "clear & npm run output"
+    "dev": "node example/entry.js"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +19,8 @@
     "nodemon": "^3.0.1"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.22.20"
+    "@babel/preset-env": "^7.22.20",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
   }
 }
