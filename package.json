@@ -4,7 +4,10 @@
   "description": "",
   "main": "bundler.js",
   "scripts": {
-    "dev": "node bundler.js | js-beautify"
+    "bundle": "node bundler.js | js-beautify",
+    "output": "node output.js",
+    "b": "clear & npm run bundle",
+    "o": "clear & npm run output"
   },
   "keywords": [],
   "author": "",

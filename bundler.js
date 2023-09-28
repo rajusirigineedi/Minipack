@@ -56,33 +56,35 @@ function createGraph(entry) {
 
 function bundle(graph) {
   let modules = "";
+  let mappings = {};
 
   graph.forEach((mod) => {
-    modules += `${mod.id}: [
-        function(require, module, exports) {
+    modules += `${mod.id}:
+        function(require, exports) {
             ${mod.code}
         },
-        ${JSON.stringify(mod.mappings)}
-    ],`;
+    `;
+    mappings = {
+      ...mappings,
+      ...mod.mappings,
+    };
   });
+
   const result = `
-        (function(modules) {
+        (function(modules, mappings) {
+            function localRequire(relativePath) {
+                return require(mappings[relativePath]);
+            }
+
             function require(id) {
-                const [fn, mappings] = modules[id];
-
-                function localRequire(relativePath) {
-                    return require(mappings[relativePath]);
-                }
-
-                const module = { exports: {} };
-
-                fn(localRequire, module, module.exports);
-
-                return module.exports;
+                const fn = modules[id];
+                const exports = {};
+                fn(localRequire, exports);
+                return exports;
             }
 
             require(0);
-        })({${modules}})
+        })({${modules}}, ${JSON.stringify(mappings)})
     `;
 
   return result;
@@ -90,5 +92,7 @@ function bundle(graph) {
 
 const graph = createGraph("./example/entry.js");
 const result = bundle(graph);
+
+fs.writeFileSync("output.js", result);
 
 console.log(result);
